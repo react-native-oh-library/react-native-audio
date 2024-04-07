@@ -1,0 +1,20 @@
+{
+  "string": [
+    {
+      "name": "page_show",
+      "value": "page from npm package"
+    },
+    {
+      "name": "label_permission_write_media",
+      "value": "用于媒体文件写"
+    },
+    {
+      "name": "label_permission_read_media",
+      "value": "用于媒体文件读"
+    },
+    {
+      "name": "label_permission_microphone",
+      "value": "用于录制音频"
+    }
+  ]
+}

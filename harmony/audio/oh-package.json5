@@ -1,0 +1,15 @@
+{
+  license: 'ISC',
+  types: '',
+  devDependencies: {
+    rnoh: 'file:../rnoh',
+  },
+  name: 'rnoh-audio',
+  description: '',
+  main: 'index.ets',
+  type: 'module',
+  version: '1.0.0',
+  dependencies: {
+    rnoh: 'file:../rnoh',
+  },
+}

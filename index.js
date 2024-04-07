@@ -4,18 +4,22 @@ import React from "react";
 
 import ReactNative, {
   NativeModules,
-  NativeAppEventEmitter,
   DeviceEventEmitter,
   PermissionsAndroid,
   Platform
 } from "react-native";
 
-var AudioRecorderManager = NativeModules.AudioRecorderManager;
+// @ts-ignore We want to check whether __turboModuleProxy exitst, it may not
+const isTurboModuleEnabled = global.__turboModuleProxy != null;
 
-var AudioRecorder = {
-  prepareRecordingAtPath: function(path, options) {
+const nativeRecorderManager = isTurboModuleEnabled ?
+  require("./NativeAudio").default :
+  NativeModules.AudioRecorderManager;
+
+const AudioRecorder = {
+  prepareRecordingAtPath: function (path, options) {
     if (this.progressSubscription) this.progressSubscription.remove();
-    this.progressSubscription = NativeAppEventEmitter.addListener('recordingProgress',
+    this.progressSubscription = DeviceEventEmitter.addListener('recordingProgress',
       (data) => {
         if (this.onProgress) {
           this.onProgress(data);
@@ -24,7 +28,7 @@ var AudioRecorder = {
     );
 
     if (this.finishedSubscription) this.finishedSubscription.remove();
-    this.finishedSubscription = NativeAppEventEmitter.addListener('recordingFinished',
+    this.finishedSubscription = DeviceEventEmitter.addListener('recordingFinished',
       (data) => {
         if (this.onFinished) {
           this.onFinished(data);
@@ -33,7 +37,7 @@ var AudioRecorder = {
     );
 
     var defaultOptions = {
-      SampleRate: 44100.0,
+      SampleRate: 48000,
       Channels: 2,
       AudioQuality: 'High',
       AudioEncoding: 'ima4',
@@ -45,10 +49,10 @@ var AudioRecorder = {
       AudioSource: 0
     };
 
-    var recordingOptions = {...defaultOptions, ...options};
+    var recordingOptions = { ...defaultOptions, ...options };
 
     if (Platform.OS === 'ios') {
-      AudioRecorderManager.prepareRecordingAtPath(
+      nativeRecorderManager.prepareRecordingAtPath(
         path,
         recordingOptions.SampleRate,
         recordingOptions.Channels,
@@ -59,26 +63,29 @@ var AudioRecorder = {
         recordingOptions.IncludeBase64
       );
     } else {
-      return AudioRecorderManager.prepareRecordingAtPath(path, recordingOptions);
+      return nativeRecorderManager.prepareRecordingAtPath(path, recordingOptions);
     }
   },
-  startRecording: function() {
-    return AudioRecorderManager.startRecording();
+  startRecording: function () {
+    return nativeRecorderManager.startRecording();
   },
-  pauseRecording: function() {
-    return AudioRecorderManager.pauseRecording();
+  pauseRecording: function () {
+    return nativeRecorderManager.pauseRecording();
   },
-  resumeRecording: function() {
-    return AudioRecorderManager.resumeRecording();
+  resumeRecording: function () {
+    return nativeRecorderManager.resumeRecording();
   },
-  stopRecording: function() {
-    return AudioRecorderManager.stopRecording();
+  stopRecording: function () {
+    return nativeRecorderManager.stopRecording();
   },
-  checkAuthorizationStatus: AudioRecorderManager.checkAuthorizationStatus,
-  requestAuthorization: () => {
+  checkAuthorizationStatus: nativeRecorderManager.checkAuthorizationStatus,
+  requestAuthorization: async () => {
     if (Platform.OS === 'ios')
-      return AudioRecorderManager.requestAuthorization();
-    else
+      return nativeRecorderManager.requestAuthorization();
+    else if (Platform.OS === 'harmony') {
+      const res = await nativeRecorderManager.requestAuthorization();
+      return res;
+    } else {
       return new Promise((resolve, reject) => {
         PermissionsAndroid.request(
           PermissionsAndroid.PERMISSIONS.RECORD_AUDIO
@@ -89,8 +96,14 @@ var AudioRecorder = {
             resolve(false)
         })
       });
+    }
+
   },
-  removeListeners: function() {
+  getAllPath: function () {
+    const res = nativeRecorderManager.getAllPath();
+    return res;
+  },
+  removeListeners: function () {
     if (this.progressSubscription) this.progressSubscription.remove();
     if (this.finishedSubscription) this.finishedSubscription.remove();
   },
@@ -101,20 +114,31 @@ let AudioSource = {};
 
 if (Platform.OS === 'ios') {
   AudioUtils = {
-    MainBundlePath: AudioRecorderManager.MainBundlePath,
-    CachesDirectoryPath: AudioRecorderManager.NSCachesDirectoryPath,
-    DocumentDirectoryPath: AudioRecorderManager.NSDocumentDirectoryPath,
-    LibraryDirectoryPath: AudioRecorderManager.NSLibraryDirectoryPath,
+    MainBundlePath: nativeRecorderManager.MainBundlePath,
+    CachesDirectoryPath: nativeRecorderManager.NSCachesDirectoryPath,
+    DocumentDirectoryPath: nativeRecorderManager.NSDocumentDirectoryPath,
+    LibraryDirectoryPath: nativeRecorderManager.NSLibraryDirectoryPath,
   };
+} else if (Platform.OS === 'harmony') {
+  const { FilesDirectoryPath, CacheDirectoryPath, TempsDirectoryPath } = AudioRecorder.getAllPath();
+  AudioUtils = {
+    FilesDirectoryPath,
+    CacheDirectoryPath,
+    TempsDirectoryPath
+  }
+  AudioSource = {
+    DEFAULT: 0,
+    MIC: 1,
+  }
 } else if (Platform.OS === 'android') {
   AudioUtils = {
-    MainBundlePath: AudioRecorderManager.MainBundlePath,
-    CachesDirectoryPath: AudioRecorderManager.CachesDirectoryPath,
-    DocumentDirectoryPath: AudioRecorderManager.DocumentDirectoryPath,
-    LibraryDirectoryPath: AudioRecorderManager.LibraryDirectoryPath,
-    PicturesDirectoryPath: AudioRecorderManager.PicturesDirectoryPath,
-    MusicDirectoryPath: AudioRecorderManager.MusicDirectoryPath,
-    DownloadsDirectoryPath: AudioRecorderManager.DownloadsDirectoryPath
+    MainBundlePath: nativeRecorderManager.MainBundlePath,
+    CachesDirectoryPath: nativeRecorderManager.CachesDirectoryPath,
+    DocumentDirectoryPath: nativeRecorderManager.DocumentDirectoryPath,
+    LibraryDirectoryPath: nativeRecorderManager.LibraryDirectoryPath,
+    PicturesDirectoryPath: nativeRecorderManager.PicturesDirectoryPath,
+    MusicDirectoryPath: nativeRecorderManager.MusicDirectoryPath,
+    DownloadsDirectoryPath: nativeRecorderManager.DownloadsDirectoryPath
   };
   AudioSource = {
     DEFAULT: 0,
@@ -130,4 +154,4 @@ if (Platform.OS === 'ios') {
   };
 }
 
-module.exports = {AudioRecorder, AudioUtils, AudioSource};
+module.exports = { AudioRecorder, AudioUtils, AudioSource };
