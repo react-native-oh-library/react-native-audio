@@ -298,6 +298,7 @@ export class AudioRecordManager {
   }
 
   private startTimer() {
+    this.stopTimer();
     this.timer = setInterval(() => {
       if (this.avRecorder.state === AVRecorderStateEnum.STARTED) {
         let currentTime: number = this.stopWatch.getTimeSeconds();

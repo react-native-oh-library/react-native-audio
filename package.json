@@ -5,13 +5,11 @@
   "main": "index.js",
   "author": "Joshua Sierles <joshua@diluvia.net> (https://github.com/jsierles)",
   "files": [
-    "ios/AudioRecorderManager.m",
-    "ios/AudioRecorderManager.h",
-    "ios/RNAudio.xcodeproj",
+    "/harmony",
     "README.md",
     "LICENSE",
     "index.js",
-    "android/*",
+    "NativeAudio.ts",
     "RNAudio.podspec"
   ],
   "keywords": [
