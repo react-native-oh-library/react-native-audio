@@ -2,14 +2,13 @@
   license: 'ISC',
   types: '',
   devDependencies: {
-    rnoh: 'file:../rnoh',
   },
-  name: 'rnoh-audio',
+  name: '@react-native-oh-tpl/react-native-audio',
   description: '',
   main: 'index.ets',
   type: 'module',
-  version: '1.0.0',
+  version: '4.3.1',
   dependencies: {
-    rnoh: 'file:../rnoh',
+    "@rnoh/react-native-openharmony": "file:../react-native-openharmony",
   },
 }

@@ -24,4 +24,8 @@ export interface CustomerOptions {
 
 export type RecordingOptions = DefaultOptions & CustomerOptions;
 
-export type AVRecorderState = 'idle' | 'prepared' | 'started' | 'paused' | 'stopped' | 'released' | 'error';
+export interface PathMap {
+  FilesDirectoryPath: string,
+  CacheDirectoryPath: string,
+  TempsDirectoryPath: string,
+}

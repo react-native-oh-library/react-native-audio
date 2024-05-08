@@ -36,7 +36,7 @@ const AudioRecorder = {
       }
     );
 
-    var defaultOptions = {
+    const defaultOptions = {
       SampleRate: 48000,
       Channels: 2,
       AudioQuality: 'High',
@@ -44,12 +44,12 @@ const AudioRecorder = {
       OutputFormat: 'mpeg_4',
       MeteringEnabled: false,
       MeasurementMode: false,
-      AudioEncodingBitRate: 32000,
+      AudioEncodingBitRate: 100000,
       IncludeBase64: false,
       AudioSource: 0
     };
 
-    var recordingOptions = { ...defaultOptions, ...options };
+    const recordingOptions = { ...defaultOptions, ...options };
 
     if (Platform.OS === 'ios') {
       nativeRecorderManager.prepareRecordingAtPath(
@@ -75,8 +75,10 @@ const AudioRecorder = {
   resumeRecording: function () {
     return nativeRecorderManager.resumeRecording();
   },
-  stopRecording: function () {
-    return nativeRecorderManager.stopRecording();
+  stopRecording: async function () {
+    await nativeRecorderManager.stopRecording();
+    this.removeListeners();
+    this.clearCallback();
   },
   checkAuthorizationStatus: nativeRecorderManager.checkAuthorizationStatus,
   requestAuthorization: async () => {
@@ -97,7 +99,6 @@ const AudioRecorder = {
         })
       });
     }
-
   },
   getAllPath: function () {
     const res = nativeRecorderManager.getAllPath();
@@ -107,6 +108,10 @@ const AudioRecorder = {
     if (this.progressSubscription) this.progressSubscription.remove();
     if (this.finishedSubscription) this.finishedSubscription.remove();
   },
+  clearCallback: function () {
+    if (this.onProgress) this.onProgress = null;
+    if (this.onFinished) this.onFinished = null;
+  }
 };
 
 let AudioUtils = {};

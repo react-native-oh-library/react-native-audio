@@ -1,6 +1,7 @@
-import { RNOHContext, TurboModule } from "rnoh/ts";
-import { AudioRecordManager, PathMap } from './AudioRecordManager';
-import { RecordingOptions } from './AudioType';
+import { TurboModule } from "@rnoh/react-native-openharmony/ts";
+import type { RNOHContext } from "@rnoh/react-native-openharmony/ts";
+import { AudioRecordManager } from './AudioRecordManager';
+import { RecordingOptions, PathMap } from './AudioType';
 
 export class AudioModule extends TurboModule {
   ctx!: RNOHContext;

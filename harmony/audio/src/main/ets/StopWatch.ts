@@ -1,4 +1,4 @@
-export class StopWatch {
+class StopWatch {
   private startTime: number = 0;
   private elapsedTime: number = 0;
   private paused: boolean = true;
@@ -34,3 +34,5 @@ export class StopWatch {
     return seconds;
   }
 }
+
+export const stopWatch = new StopWatch();
