@@ -4,8 +4,13 @@
   "description": "React Native extension for recording audio",
   "main": "index.js",
   "author": "Joshua Sierles <joshua@diluvia.net> (https://github.com/jsierles)",
-  "harmony":{
-    "alias":"react-native-audio"
+  "harmony": {
+    "alias": "react-native-audio",
+    "codegenConfig": {
+      "specPaths": [
+        "./NativeAudio.ts"
+      ]
+    }
   },
   "files": [
     "/harmony",
