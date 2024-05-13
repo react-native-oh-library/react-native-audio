@@ -1,4 +1,4 @@
-/**
+/*
  * MIT License
  *
  * Copyright (C) 2023 Huawei Device Co., Ltd.
