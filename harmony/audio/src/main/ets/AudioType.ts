@@ -1,28 +1,17 @@
-export interface DefaultOptions {
+type AudioQuality = 'Low' | 'Medium' | 'High';
+
+export interface RecordingOptions {
   SampleRate: number,
   Channels: number,
-  AudioQuality: 'Low' | 'Medium' | 'High',
+  AudioQuality?: AudioQuality,
   AudioEncoding: string,
-  OutputFormat: string,
-  MeteringEnabled: boolean,
-  MeasurementMode: boolean,
+  MeteringEnabled?: boolean,
+  MeasurementMode?: boolean,
   AudioEncodingBitRate: number,
   IncludeBase64: boolean,
+  OutputFormat: string,
   AudioSource: number
 }
-
-export interface CustomerOptions {
-  SampleRate?: number,
-  Channels: number,
-  AudioQuality?: 'Low' | 'Medium' | 'High',
-  AudioEncoding: string,
-  MeteringEnabled?: boolean, // only ios
-  MeasurementMode?: boolean, // only ios
-  AudioEncodingBitRate: number, // only android
-  IncludeBase64?: boolean,
-}
-
-export type RecordingOptions = DefaultOptions & CustomerOptions;
 
 export interface PathMap {
   FilesDirectoryPath: string,

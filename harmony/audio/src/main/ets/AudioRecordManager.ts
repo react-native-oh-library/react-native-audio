@@ -21,7 +21,7 @@ enum AVRecorderStateEnum {
   PREPARED = 'prepared',
   STARTED = 'started',
   PAUSED = 'paused',
-  STOPED = 'stoped',
+  STOPPED = 'stopped',
   RELEASED = 'released',
   ERROR = 'error'
 }
@@ -296,7 +296,7 @@ export class AudioRecordManager {
       try {
         let buffer = new ArrayBuffer(stat.size);
         fs.readSync(file.fd, buffer);
-        let unit8Array: Unit8Array = new Unit8Array(buffer);
+        let unit8Array: Uint8Array = new Uint8Array(buffer);
         let base64Helper = new util.Base64Helper();
         base64 = base64Helper.encodeToStringSync(unit8Array, util.Type.BASIC);
       } catch (error) {

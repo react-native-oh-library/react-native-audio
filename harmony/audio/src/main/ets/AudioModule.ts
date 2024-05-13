@@ -7,24 +7,24 @@ export class AudioModule extends TurboModule {
   ctx!: RNOHContext;
   audioRecorderManager: AudioRecordManager = new AudioRecordManager(this.ctx);
 
-  prepareRecordingAtPath(path: string, options: RecordingOptions) {
-    this.audioRecorderManager.prepareRecordingAtPath(path, options);
+  prepareRecordingAtPath(path: string, options: RecordingOptions): Promise<void> {
+    return this.audioRecorderManager.prepareRecordingAtPath(path, options);
   }
 
-  startRecording() {
-    this.audioRecorderManager.startRecording();
+  startRecording(): Promise<void> {
+    return this.audioRecorderManager.startRecording();
   }
 
-  pauseRecording() {
-    this.audioRecorderManager.pauseRecording();
+  pauseRecording(): Promise<void> {
+    return this.audioRecorderManager.pauseRecording();
   }
 
-  resumeRecording() {
-    this.audioRecorderManager.resumeRecording();
+  resumeRecording(): Promise<void> {
+    return this.audioRecorderManager.resumeRecording();
   }
 
-  stopRecording() {
-    this.audioRecorderManager.stopRecording();
+  stopRecording(): Promise<void> {
+    return this.audioRecorderManager.stopRecording();
   }
 
   requestAuthorization(): Promise<boolean> {

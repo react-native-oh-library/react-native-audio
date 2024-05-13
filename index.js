@@ -77,8 +77,11 @@ const AudioRecorder = {
   },
   stopRecording: async function () {
     await nativeRecorderManager.stopRecording();
-    this.removeListeners();
-    this.clearCallback();
+    const timer = setTimeout(()=>{
+      this.removeListeners();
+      this.clearCallback();
+      clearTimeout(timer);
+    },200)
   },
   checkAuthorizationStatus: nativeRecorderManager.checkAuthorizationStatus,
   requestAuthorization: async () => {
