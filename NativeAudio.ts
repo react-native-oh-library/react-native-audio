@@ -1,5 +1,6 @@
 import type { TurboModule } from "react-native/Libraries/TurboModule/RCTExport";
 import { TurboModuleRegistry } from "react-native";
+import type { Int32, Double } from 'react-native/Libraries/Types/CodegenTypes';
 
 type AudioQualityType = 'Low' | 'Medium' | 'High';
 
