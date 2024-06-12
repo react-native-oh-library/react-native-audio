@@ -288,24 +288,28 @@ export class AudioRecordManager {
 
   //停止录制
   public async stopRecording() {
-    try {
-      //仅在started或者paused状态下调用stop为合理状态切换
-      if (this.avRecorder.state === AVRecorderStateEnum.STARTED || this.avRecorder.state === AVRecorderStateEnum.PAUSED) {
+    if (this.avRecorder.state === AVRecorderStateEnum.STARTED || this.avRecorder.state === AVRecorderStateEnum.PAUSED) {
+      try {
+        //仅在started或者paused状态下调用stop为合理状态切换
+
         await this.avRecorder.stop();
+        //重置
+        await this.avRecorder.reset();
+        //释放录制实例
+        await this.avRecorder.release();
+        this.isRecording = false;
+        this.stopTimer();
+        stopWatch.stop();
+      } catch (error) {
+        Logger.error(`${TAG} stopRecording failed. code is ${error?.code}, message is ${error?.message}.`);
+      } finally {
+        fs.closeSync(this.file);
+        this.convertM4aToBase64();
+        this.showToast('stop recording.');
       }
-      //重置
-      await this.avRecorder.reset();
-      //释放录制实例
-      await this.avRecorder.release();
-      this.isRecording = false;
-      this.stopTimer();
-      stopWatch.stop();
-    } catch (error) {
-      Logger.error(`${TAG} stopRecording failed. code is ${error?.code}, message is ${error?.message}.`);
-    } finally {
-      fs.closeSync(this.file);
-      this.convertM4aToBase64();
-      this.showToast('stop recording.');
+    } else {
+      this.showToast('It is reasonable to call stopRecording only in the started or paused state.');
+      return;
     }
   }
 
