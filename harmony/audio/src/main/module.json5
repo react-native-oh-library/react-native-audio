@@ -13,24 +13,6 @@
             "EntryAbility"
           ],
         },
-      },
-      {
-        name: 'ohos.permission.WRITE_MEDIA',
-        reason: "$string:label_permission_write_media",
-        usedScene: {
-          abilities: [
-            "EntryAbility"
-          ],
-        },
-      },
-      {
-        name: 'ohos.permission.READ_MEDIA',
-        reason: "$string:label_permission_read_media",
-        usedScene: {
-          abilities: [
-            "EntryAbility"
-          ],
-        },
       }
     ]
   },
