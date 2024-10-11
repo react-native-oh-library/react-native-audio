@@ -23,13 +23,13 @@
  */
 
 import { TurboModule } from "@rnoh/react-native-openharmony/ts";
-import type { RNOHContext } from "@rnoh/react-native-openharmony/ts";
+import type { TurboModuleContext } from "@rnoh/react-native-openharmony/ts";
 import { AudioRecordManager } from './AudioRecordManager';
 import { RecordingOptions, PathMap } from './AudioType';
 import { TM } from "@rnoh/react-native-openharmony/generated/ts";
 
 export class AudioModule extends TurboModule implements TM.RTNAudio.Spec {
-  ctx!: RNOHContext;
+  ctx!: TurboModuleContext;
   audioRecorderManager: AudioRecordManager = new AudioRecordManager(this.ctx);
 
   prepareRecordingAtPath(path: string, options: RecordingOptions): Promise<void> {
